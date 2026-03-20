@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Idea } from "../types/chat";
 import { useTheme } from "../contexts/ThemeContext";
 import { X, Eye, EyeOff } from "lucide-react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 interface IdeaCloudProps {
   ideas: Idea[];
@@ -837,32 +837,35 @@ export function IdeaCloud({
     });
   }, [ideas]);
 
-  const bubbleMap = new Map<
-    string,
-    { cx: number; cy: number; category: Category; idea: Idea }
-  >();
-  ideas.forEach((idea, i) => {
-    const cx = Math.max(
-      BUBBLE_W / 2 + 10,
-      Math.min(dims.w - BUBBLE_W / 2 - 10, (idea.position.x / 100) * dims.w),
-    );
-    const cy =
-      i === 0
-        ? 30 + BUBBLE_H / 2
-        : Math.max(
-            BUBBLE_H / 2 + 10,
-            Math.min(
-              dims.h - BUBBLE_H / 2 - 10,
-              (idea.position.y / 100) * dims.h,
-            ),
-          );
-    bubbleMap.set(idea.id, {
-      cx,
-      cy,
-      category: classifyPrompt(idea.content),
-      idea,
+  const bubbleMap = useMemo(() => {
+    const map = new Map<
+      string,
+      { cx: number; cy: number; category: Category; idea: Idea }
+    >();
+    ideas.forEach((idea, i) => {
+      const cx = Math.max(
+        BUBBLE_W / 2 + 10,
+        Math.min(dims.w - BUBBLE_W / 2 - 10, (idea.position.x / 100) * dims.w),
+      );
+      const cy =
+        i === 0
+          ? 30 + BUBBLE_H / 2
+          : Math.max(
+              BUBBLE_H / 2 + 10,
+              Math.min(
+                dims.h - BUBBLE_H / 2 - 10,
+                (idea.position.y / 100) * dims.h,
+              ),
+            );
+      map.set(idea.id, {
+        cx,
+        cy,
+        category: classifyPrompt(idea.content),
+        idea,
+      });
     });
-  });
+    return map;
+  }, [ideas, dims.w, dims.h, BUBBLE_W, BUBBLE_H]);
 
   const getConnectionPoints = useCallback(
     (id: string) => {
