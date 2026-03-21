@@ -1,3 +1,4 @@
+// components/MessageList.tsx
 import { useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import { Message } from "../types/chat";
 import { MessageBubble } from "./MessageBubble";
@@ -41,9 +42,14 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
       const audio = slideAudioRef.current;
       if (!audio) return;
       audio.currentTime = 0;
-      audio.play().catch(() => {
-        // El navegador puede bloquear autoplay sin interacción previa — se ignora silenciosamente
-      });
+      audio.play().catch(() => {});
+
+      // Al salir del input, scroll al final
+      if (!isInputFocused) {
+        setTimeout(() => {
+          messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 300);
+      }
     }, [isInputFocused]);
 
     useImperativeHandle(ref, () => ({
@@ -69,50 +75,48 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
                 else messageRefs.current.delete(message.id);
               }}
             >
-              {message.id === "0" ? (
-                <div className="mb-6">
-                  <MessageBubble message={message} index={index} />
-                  <div
-                    style={{
-                      height: isInputFocused ? "0" : "50vh",
-                      width: "280px",
-                      pointerEvents: "none",
-                    }}
-                    className={`mt-3 ${modelSide === "right" ? "ml-auto pr-4" : ""}`}
-                  />
-                  <div
-                    ref={modelContainerRef}
-                    className="transition-all duration-500 ease-in-out"
-                    style={
-                      isInputFocused
-                        ? {
-                            position: "fixed",
-                            bottom: "100px",
-                            right: "calc(37% - 32rem)",
-                            zIndex: 40,
-                          }
-                        : {
-                            position: "relative",
-                            marginTop: "-50vh",
-                            height: "50vh",
-                            width: "100%",
-                            marginLeft: modelSide === "right" ? "auto" : "0",
-                            paddingRight: modelSide === "right" ? "16px" : "0",
-                            display: "flex",
-                            alignItems: "flex-start",
-                            justifyContent:
-                              modelSide === "right" ? "center" : "flex-start",
-                          }
-                    }
-                  >
-                    <JaiAssistantModel mood={assistantMood} side={modelSide} />
-                  </div>
-                </div>
-              ) : (
-                <MessageBubble message={message} index={index} />
-              )}
+              <MessageBubble message={message} index={index} />
             </div>
           ))}
+
+          {/* Modelo siempre al final de la conversación */}
+          <div>
+            <div
+              style={{
+                height: isInputFocused ? "0" : "50vh",
+                width: "280px",
+                pointerEvents: "none",
+              }}
+              className={`mt-3 ${modelSide === "right" ? "ml-auto pr-4" : ""}`}
+            />
+            <div
+              ref={modelContainerRef}
+              className="transition-all duration-500 ease-in-out"
+              style={
+                isInputFocused
+                  ? {
+                      position: "fixed",
+                      bottom: "100px",
+                      right: "calc(37% - 32rem)",
+                      zIndex: 40,
+                    }
+                  : {
+                      position: "relative",
+                      marginTop: "-50vh",
+                      height: "50vh",
+                      width: "100%",
+                      marginLeft: modelSide === "right" ? "auto" : "0",
+                      paddingRight: modelSide === "right" ? "16px" : "0",
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent:
+                        modelSide === "right" ? "center" : "flex-end",
+                    }
+              }
+            >
+              <JaiAssistantModel mood={assistantMood} side={modelSide} />
+            </div>
+          </div>
           <div ref={messagesEndRef} />
         </div>
       </div>

@@ -1,4 +1,4 @@
-// ChatContainer.tsx
+// components/ChatContainer.tsx
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Message, Idea } from "../types/chat";
 import { ChatInput } from "./ChatInput";
