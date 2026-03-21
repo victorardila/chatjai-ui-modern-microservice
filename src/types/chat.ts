@@ -1,7 +1,7 @@
 export interface Message {
   id: string;
   content: string;
-  sender: 'user' | 'ai';
+  sender: "user" | "ai";
   timestamp: Date;
 }
 
@@ -15,4 +15,11 @@ export interface Idea {
   color: string;
 }
 
-export type Theme = 'dark' | 'light';
+export type AssistantMood =
+  | "idle"
+  | "thinking"
+  | "talking"
+  | "greeting"
+  | "excited";
+
+export type Theme = "dark" | "light";

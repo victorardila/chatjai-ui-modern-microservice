@@ -1,9 +1,11 @@
+// ChatContainer.tsx
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Message, Idea } from "../types/chat";
 import { ChatInput } from "./ChatInput";
 import { IdeaCloud } from "./IdeaCloud";
 import { useTheme } from "../contexts/ThemeContext";
 import { MessageList, MessageListHandle } from "./MessageList";
+import { AssistantMood } from "../types/chat";
 
 const NEON_COLORS_DARK = [
   "rgba(0, 255, 136, 0.7)",
@@ -31,6 +33,10 @@ export function ChatContainer() {
   const { theme } = useTheme();
   const inactivityTimeoutRef = useRef<number | null>(null);
   const messageListRef = useRef<MessageListHandle>(null);
+  const [assistantMood, setAssistantMood] = useState<AssistantMood>("greeting");
+  const [modelSide] = useState<"left" | "right">(() =>
+    Math.random() > 0.5 ? "left" : "right",
+  );
 
   const handleSelectIdea = useCallback((ideaId: string) => {
     messageListRef.current?.scrollToMessage(ideaId);
@@ -103,6 +109,7 @@ export function ChatContainer() {
       };
 
       setIdeas((prev) => [...prev, newIdea]);
+      setAssistantMood("thinking");
 
       setTimeout(() => {
         const aiMessage: Message = {
@@ -112,6 +119,8 @@ export function ChatContainer() {
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, aiMessage]);
+        setAssistantMood("talking");
+        setTimeout(() => setAssistantMood("idle"), 2000);
       }, 1000);
 
       resetInactivityTimer();
@@ -126,6 +135,7 @@ export function ChatContainer() {
   }, [resetInactivityTimer]);
 
   const handleInputBlur = useCallback(() => {
+    setIsInputFocused(false); // ← agrega esta línea
     resetInactivityTimer();
   }, [resetInactivityTimer]);
 
@@ -173,9 +183,42 @@ export function ChatContainer() {
         }}
       >
         <div className="flex-1 relative flex flex-col min-h-0">
+          {/* Sombra lado izquierdo */}
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: "15%",
+              borderRight: "1px solid rgba(0,0,0,0.2)",
+              background:
+                "linear-gradient(to right, rgba(0,0,0,0.7), transparent)",
+              zIndex: 10,
+              pointerEvents: "none",
+            }}
+          />
+          {/* Sombra lado derecho */}
+          <div
+            style={{
+              position: "absolute",
+              right: 0,
+              top: 0,
+              bottom: 0,
+              width: "15%",
+              borderLeft: "1px solid rgba(0,0,0,0.2)",
+              background:
+                "linear-gradient(to left, rgba(0,0,0,0.7), transparent)",
+              zIndex: 10,
+              pointerEvents: "none",
+            }}
+          />
           <MessageList
-            ref={messageListRef} // <-- nuevo
+            ref={messageListRef}
             messages={messages}
+            assistantMood={assistantMood}
+            modelSide={modelSide}
+            isInputFocused={isInputFocused}
           />
           <ChatInput
             onSendMessage={handleSendMessage}
