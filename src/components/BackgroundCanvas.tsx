@@ -1,8 +1,9 @@
-import { useCallback, useMemo } from 'react';
-import Particles from '@tsparticles/react';
-import { Engine } from '@tsparticles/engine';
-import { loadSlim } from '@tsparticles/slim';
-import { useTheme } from '../contexts/ThemeContext';
+// components/BackgroundCanvas.tsx
+import { useCallback, useMemo } from "react";
+import Particles from "@tsparticles/react";
+import { Engine } from "@tsparticles/engine";
+import { loadSlim } from "@tsparticles/slim";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface BackgroundCanvasProps {
   isBlurred: boolean;
@@ -19,7 +20,7 @@ export function BackgroundCanvas({ isBlurred }: BackgroundCanvasProps) {
     () => ({
       background: {
         color: {
-          value: '#070B14',
+          value: "#070B14",
         },
       },
       particles: {
@@ -31,10 +32,10 @@ export function BackgroundCanvas({ isBlurred }: BackgroundCanvasProps) {
           },
         },
         color: {
-          value: ['#ffffff', '#4A90E2', '#7B68EE', '#9B59B6'],
+          value: ["#ffffff", "#4A90E2", "#7B68EE", "#9B59B6"],
         },
         shape: {
-          type: 'circle',
+          type: "circle",
         },
         opacity: {
           value: 0.6,
@@ -59,15 +60,15 @@ export function BackgroundCanvas({ isBlurred }: BackgroundCanvasProps) {
         move: {
           enable: true,
           speed: 0.3,
-          direction: 'none' as const,
+          direction: "none" as const,
           random: true,
           straight: false,
-          out_mode: 'out' as const,
+          out_mode: "out" as const,
           bounce: false,
         },
       },
       interactivity: {
-        detect_on: 'canvas' as const,
+        detect_on: "canvas" as const,
         events: {
           onhover: {
             enable: false,
@@ -80,14 +81,14 @@ export function BackgroundCanvas({ isBlurred }: BackgroundCanvasProps) {
       },
       retina_detect: true,
     }),
-    []
+    [],
   );
 
   const lightModeConfig = useMemo(
     () => ({
       background: {
         color: {
-          value: '#F3F6FC',
+          value: "#F3F6FC",
         },
       },
       particles: {
@@ -99,10 +100,10 @@ export function BackgroundCanvas({ isBlurred }: BackgroundCanvasProps) {
           },
         },
         color: {
-          value: ['#00FF88', '#00D9FF', '#FF6B9D', '#FFC940'],
+          value: ["#00FF88", "#00D9FF", "#FF6B9D", "#FFC940"],
         },
         shape: {
-          type: 'circle',
+          type: "circle",
         },
         opacity: {
           value: 0.4,
@@ -127,15 +128,15 @@ export function BackgroundCanvas({ isBlurred }: BackgroundCanvasProps) {
         move: {
           enable: true,
           speed: 1,
-          direction: 'none' as const,
+          direction: "none" as const,
           random: true,
           straight: false,
-          out_mode: 'out' as const,
+          out_mode: "out" as const,
           bounce: false,
         },
       },
       interactivity: {
-        detect_on: 'canvas' as const,
+        detect_on: "canvas" as const,
         events: {
           onhover: {
             enable: false,
@@ -148,7 +149,7 @@ export function BackgroundCanvas({ isBlurred }: BackgroundCanvasProps) {
       },
       retina_detect: true,
     }),
-    []
+    [],
   );
 
   return (
@@ -156,19 +157,19 @@ export function BackgroundCanvas({ isBlurred }: BackgroundCanvasProps) {
       <Particles
         id="tsparticles"
         init={particlesInit}
-        options={theme === 'dark' ? darkModeConfig : lightModeConfig}
+        options={theme === "dark" ? darkModeConfig : lightModeConfig}
         className={`fixed inset-0 transition-all duration-500 ${
-          isBlurred ? 'blur-[10px] brightness-75' : 'blur-0'
+          isBlurred ? "blur-[10px] brightness-75" : "blur-0"
         }`}
       />
-      {theme === 'dark' && (
+      {theme === "dark" && (
         <div
           className={`fixed inset-0 pointer-events-none transition-all duration-500 ${
-            isBlurred ? 'blur-[10px] brightness-75' : 'blur-0'
+            isBlurred ? "blur-[10px] brightness-75" : "blur-0"
           }`}
           style={{
             background:
-              'radial-gradient(ellipse at top, rgba(75, 0, 130, 0.15), transparent 50%), radial-gradient(ellipse at bottom, rgba(25, 25, 112, 0.1), transparent 50%)',
+              "radial-gradient(ellipse at top, rgba(75, 0, 130, 0.15), transparent 50%), radial-gradient(ellipse at bottom, rgba(25, 25, 112, 0.1), transparent 50%)",
           }}
         />
       )}

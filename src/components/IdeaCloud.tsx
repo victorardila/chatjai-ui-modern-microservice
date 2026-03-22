@@ -1,3 +1,4 @@
+// components/IdeaCloud.tsx
 import { motion, AnimatePresence } from "framer-motion";
 import { Idea } from "../types/chat";
 import { useTheme } from "../contexts/ThemeContext";

@@ -1,3 +1,4 @@
+// components/MessageBubble.tsx
 import { motion } from "framer-motion";
 import { Message } from "../types/chat";
 import { useTheme } from "../contexts/ThemeContext";

@@ -1,3 +1,4 @@
+// components/ThemeSwitcher.tsx
 import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
